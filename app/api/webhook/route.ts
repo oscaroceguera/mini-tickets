@@ -2,7 +2,6 @@ import { stripe } from "../../lib/stripe";
 import { prisma } from "../../lib/prismaClient";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { connect } from "http2";
 
 const endpointSecret = process.env.STRIPE_CHECKOUT_SUCCESS_WEBHOOK_SECRET!;
 
@@ -37,27 +36,29 @@ export async function POST(request: NextRequest, response: NextResponse) {
       );
 
       const user = await prisma.user.create({
+        include: {
+          order: true,
+        },
         data: {
           fullname: checkoutSessionCompleted.metadata?.fullname,
           email: checkoutSessionCompleted.metadata?.email,
           country: checkoutSessionCompleted.metadata?.country,
-        },
-      });
-
-      const order = await prisma.order.create({
-        data: {
-          user: {
-            connect: {
-              id: user.id,
+          order: {
+            create: {
+              checkoutSessionId: checkoutSessionCompleted.id,
+              ticketTypeSale: checkoutSessionCompleted.metadata?.ticketTypeSale,
+              buyer: checkoutSessionCompleted.customer_details?.email,
             },
           },
-          checkoutSessionId: checkoutSessionCompleted.id,
-          ticketTypeSale: checkoutSessionCompleted.metadata?.ticketTypeSale,
-          buyer: checkoutSessionCompleted.customer_details?.email,
         },
       });
 
       const ticket = await prisma.ticket.create({
+        include: {
+          registration: true,
+          user: true,
+          order: true,
+        },
         data: {
           ticketType: checkoutSessionCompleted.metadata?.ticketType,
           user: {
@@ -69,27 +70,18 @@ export async function POST(request: NextRequest, response: NextResponse) {
           paymentId: checkoutSessionCompleted.id,
           order: {
             connect: {
-              id: order.id,
+              id: user.order.id,
+            },
+          },
+          registration: {
+            create: {
+              event: 2025,
             },
           },
         },
       });
 
-      const registration = await prisma.registrationSheet.create({
-        data: {
-          ticket: {
-            connect: {
-              id: ticket.id,
-            },
-          },
-        },
-      });
-
-      console.log("[registration]:", registration);
-
-      // TODO: Se puede crear una tabla para checking de asistentes y ese id usar para esta puede ir en la misma consulta de creacion del ticket
-
-      // TODO: ENVIAR EMAIL con QR
+      // TODO: ENVIAR EMAIL con QR ticket.registration.id
 
       break;
 

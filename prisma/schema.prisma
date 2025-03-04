@@ -24,6 +24,7 @@ model User {
 }
 
 // *Todos los fields estan sujetos a cambios
+// TODO: ORDER tiene muchos usuarios
 model Order {
   id                    String    @id @default(uuid())
   user                  User      @relation(fields: [userId], references: [id])
@@ -58,6 +59,7 @@ model RegistrationSheet {
   registeredDay2      Boolean   @default(false)
   ticket              Ticket    @relation(fields: [ticketId], references: [id])
   ticketId            String    @unique
+  event               Int
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
