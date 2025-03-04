@@ -2,6 +2,7 @@ import { stripe } from "../../lib/stripe";
 import { prisma } from "../../lib/prismaClient";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { connect } from "http2";
 
 const endpointSecret = process.env.STRIPE_CHECKOUT_SUCCESS_WEBHOOK_SECRET!;
 
@@ -35,51 +36,76 @@ export async function POST(request: NextRequest, response: NextResponse) {
         checkoutSessionCompleted
       );
 
-      const user = await prisma.user.create({
-        include: {
-          order: true,
-        },
+      const order = await prisma.order.create({
         data: {
-          fullname: checkoutSessionCompleted.metadata?.fullname,
-          email: checkoutSessionCompleted.metadata?.email,
-          country: checkoutSessionCompleted.metadata?.country,
-          order: {
-            create: {
-              checkoutSessionId: checkoutSessionCompleted.id,
-              ticketTypeSale: checkoutSessionCompleted.metadata?.ticketTypeSale,
-              buyer: checkoutSessionCompleted.customer_details?.email,
-            },
-          },
+          checkoutSessionId: checkoutSessionCompleted.id,
+          ticketTypeSale: checkoutSessionCompleted.metadata?.ticketTypeSale,
+          buyer: checkoutSessionCompleted.customer_details?.email,
         },
       });
 
-      const ticket = await prisma.ticket.create({
-        include: {
-          registration: true,
-          user: true,
-          order: true,
-        },
-        data: {
-          ticketType: checkoutSessionCompleted.metadata?.ticketType,
-          user: {
-            connect: {
-              id: user.id,
-            },
-          },
-          paymenIntent: checkoutSessionCompleted.payment_intent,
-          paymentId: checkoutSessionCompleted.id,
-          order: {
-            connect: {
-              id: user.order.id,
-            },
-          },
-          registration: {
-            create: {
-              event: 2025,
-            },
-          },
-        },
-      });
+      // const user = await prisma.user.create({
+      //   include: {
+      //     order: true,
+      //   },
+      //   data: {
+      //     fullname: checkoutSessionCompleted.metadata?.fullname,
+      //     email: checkoutSessionCompleted.metadata?.email,
+      //     country: checkoutSessionCompleted.metadata?.country,
+      //     order: {
+      //       create: {
+      //         checkoutSessionId: checkoutSessionCompleted.id,
+      //         ticketTypeSale: checkoutSessionCompleted.metadata?.ticketTypeSale,
+      //         buyer: checkoutSessionCompleted.customer_details?.email,
+      //       },
+      //     },
+      //   },
+      // });
+
+      // const user = await prisma.user.create({
+      //   data: {
+      //     fullname: checkoutSessionCompleted.metadata?.fullname,
+      //     email: checkoutSessionCompleted.metadata?.email,
+      //     country: checkoutSessionCompleted.metadata?.country,
+      //   },
+      // });
+      // const user2 = await prisma.user.create({
+      //   data: {
+      //     fullname: "SEGUNDO USER",
+      //     email: "email2222@email.com",
+      //     country: "PERU",
+      //   },
+      // });
+
+      // const users = [user, user2];
+
+      // const ticket = await prisma.ticket.create({
+      //   include: {
+      //     registration: true,
+      //     user: true,
+      //     order: true,
+      //   },
+      //   data: {
+      //     ticketType: checkoutSessionCompleted.metadata?.ticketType,
+      //     user: {
+      //       connect: {
+      //         id: user.id,
+      //       },
+      //     },
+      //     paymenIntent: checkoutSessionCompleted.payment_intent,
+      //     paymentId: checkoutSessionCompleted.id,
+      //     order: {
+      //       connect: {
+      //         id: order.id,
+      //       },
+      //     },
+      //     registration: {
+      //       create: {
+      //         event: 2025,
+      //       },
+      //     },
+      //   },
+      // });
 
       // TODO: ENVIAR EMAIL con QR ticket.registration.id
 
