@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// *Todos los fields estan sujetos a cambios
+model User {
+  id                String      @id @default(uuid())
+  fullname          String?
+  email             String
+  country           String?
+  shareDataAgree    Boolean     @default(true)
+  ticket            Ticket?
+  order             Order?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+// *Todos los fields estan sujetos a cambios
+model Order {
+  id                    String    @id @default(uuid())
+  user                  User      @relation(fields: [userId], references: [id])
+  userId                String    @unique
+  checkoutSessionId     String    @unique
+  ticketTypeSale        String // TicketTypeSale
+  buyer                 String?
+  tickets               Ticket[]
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// Todos los fields estan sujetos a cambios
+model Ticket {
+  id                  String    @id @default(uuid())
+  ticketType          String // TicketType
+  user                User      @relation(fields: [userId], references: [id])
+  userId              String    @unique
+  paymenIntent        String    @unique
+  paymentId           String    @unique
+  order               Order?    @relation(fields: [orderId], references: [id])
+  orderId             String?
+  registration        RegistrationSheet?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+// Todos los fields estan sujetos a cambios
+model RegistrationSheet {
+  id                  String    @id @default(uuid())
+  registeredDay1      Boolean   @default(false)
+  registeredDay2      Boolean   @default(false)
+  ticket              Ticket    @relation(fields: [ticketId], references: [id])
+  ticketId            String    @unique
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+// Todos los fields estan sujetos a cambios
+enum TicketType {
+  EARLY
+  STUDENT
+}
+
+// Todos los fields estan sujetos a cambios
+enum TicketTypeSale {
+  NORMAl
+  GIFT
+  GROUP
+}
