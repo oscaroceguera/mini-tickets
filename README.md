@@ -1,3 +1,13 @@
+# TODO
+
+- Send email with qr
+- Add Gihub
+- Add project in vercel
+- Add env in vercel
+- Create storage in vercel
+- Change to Postgresql
+- Change the stripe webhook domain
+
 ## BD
 
 USER:
