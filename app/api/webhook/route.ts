@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prismaClient";
 import { transporter } from "../../lib/nodemailer";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { toDataURL } from "qrcode";
 
 const endpointSecret = process.env.STRIPE_CHECKOUT_SUCCESS_WEBHOOK_SECRET!;
 
@@ -86,12 +87,12 @@ export async function POST(request: NextRequest, response: NextResponse) {
         },
       });
 
-      // TODO: ENVIAR EMAIL con QR ticket.registration.id
+      const src = await toDataURL(ticket.registration.id);
       const info = await transporter.sendMail({
         from: "Mini-Ticket <admin@miniticket.com>",
         to: user.email,
         subject: "Gracias por tu compra",
-        html: `<h1>Hola ${user.fullname}</h1><p>Este es tu ticket: ${ticket.registration.id}</p>`,
+        html: `<h1>Hola ${user.fullname}</h1><br /><p>Este es tu ticket:</p><br /><img src="${src}" />`,
       });
 
       console.log("info =>", info);
