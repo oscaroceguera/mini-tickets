@@ -1,7 +1,7 @@
 # TODO
 
-- Send email with qr
-- Add Gihub
+- [x] Send email with qr
+- [x] Add Gihub
 - Add project in vercel
 - Add env in vercel
 - Create storage in vercel
