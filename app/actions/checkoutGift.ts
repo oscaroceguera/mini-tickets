@@ -19,7 +19,7 @@ const STRIPE_PRICE_ID: PriceID = {
   STUDENT: process.env.STRIPE_PRICE_STUDENT!,
 };
 
-export async function checkout(_prevstate: State, formData: FormData) {
+export async function checkoutGift(_prevstate: State, formData: FormData) {
   // Validate if user exist
   const userVerify = await prisma.user.findFirst({
     where: {
@@ -35,7 +35,7 @@ export async function checkout(_prevstate: State, formData: FormData) {
 
   //  Stripe checkout-session
   const ticketType = formData.get("ticketType") as string;
-  const ticketTypeSale = formData.get("ticketTypeSale") as string;
+  const ticketTypeSale = formData.get("ticketTypeSale") as string; // GIFT
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: [
@@ -46,9 +46,7 @@ export async function checkout(_prevstate: State, formData: FormData) {
     ],
     metadata: {
       ticketType: ticketType,
-      fullname: formData.get("fullname") as string,
       email: formData.get("email") as string,
-      country: formData.get("country") as string,
       ticketTypeSale: ticketTypeSale,
     },
     mode: "payment",

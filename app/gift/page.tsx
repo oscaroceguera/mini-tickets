@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { checkout } from "./actions/checkout";
+import { checkoutGift } from "../actions/checkoutGift";
 import { useActionState } from "react";
 
 type TicketType = "EARLY" | "STUDENT";
@@ -27,31 +27,21 @@ const initialState = {
 };
 
 export default function Home() {
-  const [state, formAction, pending] = useActionState(checkout, initialState);
+  const [state, formAction, pending] = useActionState(
+    checkoutGift,
+    initialState
+  );
   console.log("🚀 ~ Home ~ state:", state);
   return (
     <div className="h-screen p-28">
-      <h1 className="font-black text-4xl text-center">Buy tickets</h1>
-      <div className="m-auto w-1/2 mt-5 grid grid-cols-2 gap-1">
-        <Link
-          href={"/gift"}
-          className="bg-pink-400 text-center py-2 text-white font-semibold rounded-sm hover:opacity-80"
-        >
-          Ticket de regalo
-        </Link>
-        <Link
-          href={"/"}
-          className="bg-orange-400 text-center py-2 text-white font-semibold rounded-sm hover:opacity-80"
-        >
-          Tickets por grupo
-        </Link>
-      </div>
+      <h1 className="font-black text-4xl text-center">GIFT tickets</h1>
+
       <form
         action={formAction}
         className="border border-gray-400 p-5 rounded-sm w-1/2 my-5 mx-auto"
       >
         <label htmlFor="ticketType" className="text-lg font-semibold">
-          Seleccione ticket
+          Seleccione ticket de regalo
         </label>
         <div className="mt-2">
           <select
@@ -67,19 +57,6 @@ export default function Home() {
           </select>
         </div>
         <div className="mt-4">
-          <label htmlFor="fullname">
-            Nombre completo <span className="text-red-600">*</span>
-          </label>
-          <div className="mt-2">
-            <input
-              id="fullname"
-              name="fullname"
-              placeholder="Nombre completo"
-              className="border-gray-300 border w-full p-2 rounded-md"
-            />
-          </div>
-        </div>
-        <div className="mt-4">
           <label htmlFor="email">
             Email <span className="text-red-600">*</span>
           </label>
@@ -92,21 +69,10 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="mt-4">
-          <label htmlFor="country">País</label>
-          <div className="mt-2">
-            <input
-              id="country"
-              name="country"
-              placeholder="México"
-              className="border-gray-300 border w-full p-2 rounded-md"
-            />
-          </div>
-        </div>
         <input
           id="ticketTypeSale"
           name="ticketTypeSale"
-          defaultValue="NORMAL"
+          defaultValue="GIFT"
           className=" hidden"
         />
         <button
