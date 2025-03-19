@@ -40,7 +40,7 @@ export default function Home() {
           Ticket de regalo
         </Link>
         <Link
-          href={"/"}
+          href={"/group"}
           className="bg-orange-400 text-center py-2 text-white font-semibold rounded-sm hover:opacity-80"
         >
           Tickets por grupo

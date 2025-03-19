@@ -172,6 +172,77 @@ export async function POST(request: NextRequest, response: NextResponse) {
         console.log("info =>", info);
       }
 
+      if (ticketTypeSale === "GROUP") {
+        console.log("<<<<<<<<<ENTRA EL GIFLT >>>>>>>>>>>>>>>>>>");
+        console.log(
+          "checkoutSessionCompleted.metadata",
+          checkoutSessionCompleted.metadata
+        );
+
+        const emails = checkoutSessionCompleted.metadata?.emails;
+        if (!emails) {
+          return; // some errors
+        }
+        const newEmails = JSON.parse(emails);
+
+        newEmails.forEach(async (email) => {
+          // ADD USER
+          const user = await prisma.user.create({
+            include: {
+              order: true,
+            },
+            data: {
+              email: email,
+              order: {
+                connect: {
+                  id: order.id,
+                },
+              },
+            },
+          });
+
+          // ticketTypeSale = GROUP
+          const ticket = await prisma.ticket.create({
+            include: {
+              registration: true,
+            },
+            data: {
+              ticketType: checkoutSessionCompleted.metadata?.ticketType,
+              user: {
+                connect: {
+                  id: user.id,
+                },
+              },
+              paymenIntent: checkoutSessionCompleted.payment_intent,
+              paymentId: checkoutSessionCompleted.id,
+              order: {
+                connect: {
+                  id: order.id,
+                },
+              },
+              registration: {
+                create: {
+                  event: 2025,
+                  // TicketTypeSale,  NORMAL = true, GIFT = false, GROUP = false
+                  onboarding: false,
+                },
+              },
+            },
+          });
+
+          // ticketTypeSale = GROUP
+          const registrationId = ticket.registration.id;
+          const info = await transporter.sendMail({
+            from: "Mini-Ticket <admin@miniticket.com>",
+            to: user.email,
+            subject: "Gracias por tu compra",
+            html: `<h1>Hola ${order.buyer} te regala una entrada al evento2025</h1><br /><p>Tu ticket esta casi listo, solo llena tus datos para recibirlo:</p><br /><a href="http://localhost:3000/onboarding/${registrationId}">Onboarding</a>`,
+          });
+
+          console.log("info =>", info);
+        });
+      }
+
       break;
 
     default:
