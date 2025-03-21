@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
         }
         const newEmails = JSON.parse(emails);
 
-        newEmails.forEach(async (email) => {
+        newEmails.forEach(async (email: string) => {
           // ADD USER
           const user = await prisma.user.create({
             include: {
