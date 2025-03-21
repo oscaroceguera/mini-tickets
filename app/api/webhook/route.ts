@@ -1,7 +1,7 @@
 import { stripe } from "../../lib/stripe";
 import { prisma } from "../../lib/prismaClient";
 import { transporter } from "../../lib/nodemailer";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import { toDataURL } from "qrcode";
 
