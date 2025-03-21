@@ -176,11 +176,8 @@ export async function POST(request: NextRequest) {
       }
 
       if (ticketTypeSale === "GROUP") {
-        console.log("<<<<<<<<<ENTRA EL GIFLT >>>>>>>>>>>>>>>>>>");
-        console.log(
-          "checkoutSessionCompleted.metadata",
-          checkoutSessionCompleted.metadata
-        );
+        console.log("[ENTRA EL GROUP]");
+        console.log("[META-DATA]", checkoutSessionCompleted.metadata);
 
         const emails = checkoutSessionCompleted.metadata?.emails;
         if (!emails) {
@@ -189,6 +186,7 @@ export async function POST(request: NextRequest) {
         const newEmails = JSON.parse(emails);
 
         newEmails.forEach(async (email: string) => {
+          console.log("[FOR-EACH]");
           // ADD USER
           const user = await prisma.user.create({
             include: {
@@ -203,6 +201,8 @@ export async function POST(request: NextRequest) {
               },
             },
           });
+
+          console.log("[USER]", user);
 
           // ticketTypeSale = GROUP
           const ticket = await prisma.ticket.create({
@@ -234,16 +234,22 @@ export async function POST(request: NextRequest) {
             },
           });
 
+          console.log("[TICKET]", ticket);
+
           // ticketTypeSale = GROUP
           const registrationId = ticket?.registration?.id;
-          const info = await transporter.sendMail({
-            from: "Mini-Ticket <admin@miniticket.com>",
-            to: user.email,
-            subject: "Gracias por tu compra",
-            html: `<h1>Hola ${order.buyer} te regala una entrada al evento2025</h1><br /><p>Tu ticket esta casi listo, solo llena tus datos para recibirlo:</p><br /><a href="http://localhost:3000/onboarding/${registrationId}">Onboarding</a>`,
-          });
-
-          console.log("info =>", info);
+          await transporter.sendMail(
+            {
+              from: "Mini-Ticket <admin@miniticket.com>",
+              to: user.email,
+              subject: "Gracias por tu compra",
+              html: `<h1>Hola ${order.buyer} te regala una entrada al evento2025</h1><br /><p>Tu ticket esta casi listo, solo llena tus datos para recibirlo:</p><br /><a href="http://localhost:3000/onboarding/${registrationId}">Onboarding</a>`,
+            },
+            (err, info) => {
+              console.log("[ERROR]", err);
+              console.log("[INFO]", info);
+            }
+          );
         });
       }
 
