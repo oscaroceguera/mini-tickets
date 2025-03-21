@@ -13,7 +13,7 @@ const endpointSecret = process.env.STRIPE_CHECKOUT_SUCCESS_WEBHOOK_SECRET!;
 //   country?: string;
 // };
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   const body = await request.text();
   const headersList = await headers();
   const sig = headersList.get("stripe-signature")!;
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (error) {
     console.log("ERROR", error);
-    response.status(400).send(`Webhook Error: ${error}`);
+    // response.status(400).send(`Webhook Error: ${error}`);
     return;
   }
 
