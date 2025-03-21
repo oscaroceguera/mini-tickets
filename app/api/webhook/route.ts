@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
           },
           data: {
             fullname: checkoutSessionCompleted.metadata?.fullname,
-            email: checkoutSessionCompleted.metadata?.email,
+            email: checkoutSessionCompleted.metadata?.email as string,
             country: checkoutSessionCompleted.metadata?.country,
             order: {
               connect: {
