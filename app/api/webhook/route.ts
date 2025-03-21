@@ -7,6 +7,7 @@ import { toDataURL } from "qrcode";
 
 const endpointSecret = process.env.STRIPE_CHECKOUT_SUCCESS_WEBHOOK_SECRET!;
 
+// ELIMINAR ESTO
 // type TUser = {
 //   fullname?: string;
 //   email: string;
