@@ -102,10 +102,11 @@ export async function POST(request: NextRequest) {
           },
         });
 
+        if (!ticket) return;
+
         // ticketTypeSale = NORMAL
-        const ticketRegistrationId = ticket.registration.id
-          ? ticket.registration.id
-          : "geenrico";
+        const ticketRegistrationId = ticket.registration.id;
+
         const src = await toDataURL(ticketRegistrationId);
         const info = await transporter.sendMail({
           from: "Mini-Ticket <admin@miniticket.com>",
