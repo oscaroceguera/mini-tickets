@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
             order: true,
           },
           data: {
-            email: checkoutSessionCompleted.metadata?.email,
+            email: checkoutSessionCompleted.metadata?.email as string,
             order: {
               connect: {
                 id: order.id,
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
         });
 
         // ticketTypeSale = GIFT
-        const registrationId = ticket.registration.id;
+        const registrationId = ticket?.registration?.id;
         const info = await transporter.sendMail({
           from: "Mini-Ticket <admin@miniticket.com>",
           to: user.email,
@@ -234,7 +234,7 @@ export async function POST(request: NextRequest) {
           });
 
           // ticketTypeSale = GROUP
-          const registrationId = ticket.registration.id;
+          const registrationId = ticket?.registration?.id;
           const info = await transporter.sendMail({
             from: "Mini-Ticket <admin@miniticket.com>",
             to: user.email,
