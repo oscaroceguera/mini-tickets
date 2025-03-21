@@ -2,10 +2,10 @@
 
 - [x] Send email with qr
 - [x] Add Gihub
-- Add project in vercel
-- Add env in vercel
-- Create storage in vercel
-- Change to Postgresql
+- [x] Add project in vercel
+- [x] Add env in vercel (poner primero)
+- [x] Create storage in vercel
+- [x] Change to Postgresql
 - Change the stripe webhook domain
 
 ## BD

@@ -14,8 +14,11 @@ interface Order {
   ticketTypeSale: string;
 }
 
+export const dynamic = "force-dynamic";
+
 async function Dasboard() {
   const users = await prisma.user.findMany();
+  console.log("🚀 ~ Dasboard ~ users:", users);
   const orders = await prisma.order.findMany();
   const tickets = await prisma.ticket.findMany();
   const registrations = await prisma.registrationSheet.findMany();
