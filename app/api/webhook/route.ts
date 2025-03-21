@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         });
 
         // ticketTypeSale = NORMAL
-        const src = await toDataURL(ticket.registration.id!);
+        const src = await toDataURL(ticket.registration.id ?? "some");
         const info = await transporter.sendMail({
           from: "Mini-Ticket <admin@miniticket.com>",
           to: user.email,
