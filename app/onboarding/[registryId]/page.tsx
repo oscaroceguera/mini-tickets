@@ -8,7 +8,7 @@ async function Onboarding({
 }) {
   const { registryId } = await params;
 
-  const registry = await prisma.RegistrationSheet.findFirst({
+  const registry = await prisma.registrationSheet.findFirst({
     include: {
       ticket: {
         include: {
