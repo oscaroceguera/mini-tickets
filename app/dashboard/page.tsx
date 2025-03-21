@@ -1,5 +1,19 @@
 import { prisma } from "../lib/prismaClient";
 
+interface Registration {
+  onboarding: boolean;
+  registeredDay1: boolean;
+  registeredDay2: boolean;
+}
+
+interface Ticket {
+  ticketType: string;
+}
+
+interface Order {
+  ticketTypeSale: string;
+}
+
 async function Dasboard() {
   const users = await prisma.user.findMany();
   const orders = await prisma.order.findMany();
@@ -7,23 +21,29 @@ async function Dasboard() {
   const registrations = await prisma.registrationSheet.findMany();
 
   const onboardingCompleted = registrations.filter(
-    (i) => i.onboarding === true
+    (i: Registration) => i.onboarding === true
   ).length;
   const countRegisteredDay1 = registrations.filter(
-    (i) => i.registeredDay1 === true
+    (i: Registration) => i.registeredDay1 === true
   ).length;
   const countRegisteredDay2 = registrations.filter(
-    (i) => i.registeredDay2 === true
+    (i: Registration) => i.registeredDay2 === true
   ).length;
-  const eatylTickets = tickets.filter((i) => i.ticketType === "EARLY").length;
+  const eatylTickets = tickets.filter(
+    (i: Ticket) => i.ticketType === "EARLY"
+  ).length;
   const stundentTickets = tickets.filter(
-    (i) => i.ticketType === "STUDENT"
+    (i: Ticket) => i.ticketType === "STUDENT"
   ).length;
   const normalOrders = orders.filter(
-    (i) => i.ticketTypeSale === "NORMAL"
+    (i: Order) => i.ticketTypeSale === "NORMAL"
   ).length;
-  const giftOrders = orders.filter((i) => i.ticketTypeSale === "GIFT").length;
-  const groupOrders = orders.filter((i) => i.ticketTypeSale === "GROUP").length;
+  const giftOrders = orders.filter(
+    (i: Order) => i.ticketTypeSale === "GIFT"
+  ).length;
+  const groupOrders = orders.filter(
+    (i: Order) => i.ticketTypeSale === "GROUP"
+  ).length;
 
   return (
     <div className="h-screen p-4 md:p-24">
