@@ -13,7 +13,7 @@ export async function createTicketGift(_prevstate: State, formData: FormData) {
   console.log("🚀 ~ createTicketGift ~ formData:", formData);
 
   // Validate if onboarding is false and exist
-  const registry = await prisma.RegistrationSheet.findFirst({
+  const registry = await prisma.registrationSheet.findFirst({
     where: {
       id: formData.get("registryId") as string,
     },
@@ -46,7 +46,7 @@ export async function createTicketGift(_prevstate: State, formData: FormData) {
   console.log("=====> [UPDATE]: USER");
 
   // Update regisrty onboarding = true
-  const newRegistry = await prisma.RegistrationSheet.update({
+  const newRegistry = await prisma.registrationSheet.update({
     where: {
       id: formData.get("registryId") as string,
     },
