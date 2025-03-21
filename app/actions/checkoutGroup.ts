@@ -2,7 +2,6 @@
 
 import { redirect } from "next/navigation";
 import { stripe } from "../lib/stripe";
-import { prisma } from "../lib/prismaClient";
 
 type State = {
   message?: string;
