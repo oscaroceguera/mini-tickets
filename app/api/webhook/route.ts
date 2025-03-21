@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       const order = await prisma.order.create({
         data: {
           checkoutSessionId: checkoutSessionCompleted.id,
-          ticketTypeSale,
+          ticketTypeSale: ticketTypeSale as string,
           buyer: checkoutSessionCompleted.customer_details?.email,
         },
       });
