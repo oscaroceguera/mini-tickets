@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
             registration: true,
           },
           data: {
-            ticketType: checkoutSessionCompleted.metadata?.ticketType,
+            ticketType: checkoutSessionCompleted.metadata?.ticketType as string,
             user: {
               connect: {
                 id: user.id,
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
             registration: true,
           },
           data: {
-            ticketType: checkoutSessionCompleted.metadata?.ticketType,
+            ticketType: checkoutSessionCompleted.metadata?.ticketType as string,
             user: {
               connect: {
                 id: user.id,
@@ -207,7 +207,8 @@ export async function POST(request: NextRequest) {
               registration: true,
             },
             data: {
-              ticketType: checkoutSessionCompleted.metadata?.ticketType,
+              ticketType: checkoutSessionCompleted.metadata
+                ?.ticketType as string,
               user: {
                 connect: {
                   id: user.id,
