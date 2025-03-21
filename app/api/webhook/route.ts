@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
                 id: user.id,
               },
             },
-            paymenIntent: checkoutSessionCompleted.payment_intent,
+            paymenIntent: checkoutSessionCompleted.payment_intent as string,
             paymentId: checkoutSessionCompleted.id,
             order: {
               connect: {
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
                 id: user.id,
               },
             },
-            paymenIntent: checkoutSessionCompleted.payment_intent,
+            paymenIntent: checkoutSessionCompleted.payment_intent as string,
             paymentId: checkoutSessionCompleted.id,
             order: {
               connect: {
@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
                   id: user.id,
                 },
               },
-              paymenIntent: checkoutSessionCompleted.payment_intent,
+              paymenIntent: checkoutSessionCompleted.payment_intent as string,
               paymentId: checkoutSessionCompleted.id,
               order: {
                 connect: {
