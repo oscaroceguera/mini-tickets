@@ -102,8 +102,6 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        if (!ticket) break;
-
         // ticketTypeSale = NORMAL
         const ticketRegistrationId = ticket.registration.id;
 
