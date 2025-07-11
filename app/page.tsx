@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { checkout } from "./actions/checkout";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState } from "react";
 import useSWR from "swr";
 
 type TicketType = "EARLY" | "STUDENT";
