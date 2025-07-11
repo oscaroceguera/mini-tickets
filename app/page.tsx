@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { checkout } from "./actions/checkout";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import useSWR from "swr";
 
 type TicketType = "EARLY" | "STUDENT";
 
@@ -26,8 +27,23 @@ const initialState = {
   message: "",
 };
 
+type Items = {
+  name: string;
+  description: string;
+};
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function Home() {
   const [state, formAction, pending] = useActionState(checkout, initialState);
+  const { data, error, isLoading } = useSWR<Items[]>(
+    "/api/edge-single",
+    fetcher
+  );
+
+  if (isLoading) return <p>Loading items...</p>;
+  if (error) return <p>Failed to load items...</p>;
+
   console.log("🚀 ~ Home ~ state:", state);
   return (
     <div className="h-screen p-28">
@@ -116,6 +132,16 @@ export default function Home() {
           {pending ? "Loading..." : "Checkout"}
         </button>
       </form>
+      <div className="border text-center">
+        <h1 className="font-black">PROBAR EDGE-CONFIG</h1>
+        <ul>
+          {data?.map((item, id) => (
+            <li key={id}>
+              {item.name} - {item.description}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
